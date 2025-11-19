@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Денис Родичев](https://up.htmlacademy.ru/javascript-individual/2/user/2564453).
-* Наставник: `Неизвестно`.
+* Наставник: [Анна Лисененкова](https://htmlacademy.ru/profile/ankhena).
 
 ---
 
