@@ -1,6 +1,7 @@
 function checkStringLength(string = '', maxSymbols = 1) {
   return string.length <= maxSymbols;
 }
+checkStringLength('проверяемая строка', 20);
 
 function isPalindrome(string = ''){
   string = string.replaceAll(' ', '');
@@ -11,6 +12,7 @@ function isPalindrome(string = ''){
   }
   return string === reversedString;
 }
+isPalindrome('топот');
 
 function extractNumbers(string){
   let result = '';
@@ -22,3 +24,4 @@ function extractNumbers(string){
   }
   return result === '' ? NaN : Number(result);
 }
+extractNumbers('1 кефир, 0.5 батона');
