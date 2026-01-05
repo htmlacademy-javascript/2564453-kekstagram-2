@@ -116,8 +116,8 @@ const createPhotosArray = () =>
 window.photosArray = createPhotosArray();
 
 // Для проверки
-console.log('Массив фотографий создан:', window.photosArray);
+/*console.log('Массив фотографий создан:', window.photosArray);
 console.log(`Создано ${window.photosArray.length} фотографий`);
 window.photosArray.forEach((photo, index) => {
   console.log(`Фото ${index + 1}: ${photo.description}, лайков: ${photo.likes}, комментариев: ${photo.comments.length}`);
-});
+});*/
