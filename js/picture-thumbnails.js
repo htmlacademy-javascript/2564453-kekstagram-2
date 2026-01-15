@@ -7,6 +7,8 @@ const picturesContainer = document.querySelector('.pictures');
 const initPictureThumbnails = () => {
   // Получаем массив фотографий
   const photos = createPhotosArray();
+  // Создаение фрагмента
+  const fragment = document.createDocumentFragment();
 
   // Создание миниатюр для каждой фотографии в массиве с описанием и тд
   photos.forEach((photo) => {
@@ -20,8 +22,9 @@ const initPictureThumbnails = () => {
     pictureComments.textContent = photo.comments.length;
     pictureLikes.textContent = photo.likes;
 
-    picturesContainer.appendChild(pictureElement);
+    fragment.appendChild(pictureElement);//добавление в фрагмент
   });
+  picturesContainer.appendChild(fragment);// Вставляем все за один раз
 };
 
 // Экспортируем функцию для использования в main.js
