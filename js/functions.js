@@ -1,4 +1,4 @@
-function checkStringLength(string = '', maxSymbols = 1) {
+/*function checkStringLength(string = '', maxSymbols = 1) {
   return string.length <= maxSymbols;
 }
 checkStringLength('проверяемая строка', 20);
@@ -24,4 +24,4 @@ function extractNumbers(string){
   }
   return result === '' ? NaN : Number(result);
 }
-extractNumbers('1 кефир, 0.5 батона');
+extractNumbers('1 кефир, 0.5 батона');*/
