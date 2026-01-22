@@ -1,9 +1,16 @@
 import { createPhotosArray } from './data.js';
+import { initPictureThumbnails } from './picture-thumbnails.js';
+import { initFullPicture } from './full-picture.js';
+import { initGallery } from './gallery.js';
 
 // Создаем массив фотографий
 window.photosArray = createPhotosArray();
 
-import { initPictureThumbnails } from './picture-thumbnails.js';
-
-//Отрисовка миниатюр
+// Отрисовка миниатюр
 initPictureThumbnails();
+
+// Инициализация полноразмерного просмотра
+initFullPicture();
+
+// Инициализация галереи
+initGallery();
