@@ -1,7 +1,6 @@
 import { NAMES, MESSAGES, DESCRIPTIONS } from './constants.js';
 import { getRandomInteger, getRandomArrayElement } from './util.js';
 
-// Вспомогательные функции для создания данных
 const getRandomDescription = () => getRandomArrayElement(DESCRIPTIONS);
 
 const getRandomMessage = () => {
@@ -10,7 +9,6 @@ const getRandomMessage = () => {
   return shuffled.slice(0, count).join(' ');
 };
 
-// Создание одного комментария
 export const createComment = () => {
   const commentId = getRandomInteger(1, 10000);
 
@@ -22,7 +20,6 @@ export const createComment = () => {
   };
 };
 
-// Создание массива комментариев с уникальными ID
 export const createComments = () => {
   const commentsCount = getRandomInteger(0, 30);
   const comments = [];
@@ -50,7 +47,6 @@ export const createComments = () => {
   return comments;
 };
 
-// Создание одного объекта фотографии
 export const createPhoto = (id) => ({
   id: id,
   url: `photos/${id}.jpg`,
@@ -59,6 +55,5 @@ export const createPhoto = (id) => ({
   comments: createComments()
 });
 
-// Создание массива из 25 фотографий
 export const createPhotosArray = () =>
   Array.from({ length: 25 }, (_, index) => createPhoto(index + 1));
