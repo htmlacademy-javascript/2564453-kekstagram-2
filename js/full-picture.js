@@ -76,6 +76,8 @@ function closeFullPicture() {
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', escKeydownHandler);
   bigPicture.removeEventListener('click', overlayClickHandler);
+  cancelButton.removeEventListener('click', closeFullPicture);
+  commentsLoader.removeEventListener('click', showNextComments);
   currentComments = [];
   shownCommentsCount = 0;
 }
@@ -103,11 +105,8 @@ function openFullPicture(photo) {
   body.classList.add('modal-open');
   document.addEventListener('keydown', escKeydownHandler);
   bigPicture.addEventListener('click', overlayClickHandler);
-}
-
-function initFullPicture() {
   cancelButton.addEventListener('click', closeFullPicture);
   commentsLoader.addEventListener('click', showNextComments);
 }
 
-export { initFullPicture, openFullPicture, closeFullPicture };
+export { openFullPicture, closeFullPicture };
