@@ -1,10 +1,8 @@
-import { createPhotosArray } from './data.js';
-
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesContainer = document.querySelector('.pictures');
 
 const initPictureThumbnails = () => {
-  const photos = createPhotosArray();
+  const photos = window.photosArray;
   const fragment = document.createDocumentFragment();
 
   photos.forEach((photo) => {
@@ -14,10 +12,9 @@ const initPictureThumbnails = () => {
     const pictureLikes = pictureElement.querySelector('.picture__likes');
 
     pictureElement.dataset.photoId = photo.id;
-
     pictureImage.src = photo.url;
     pictureImage.alt = photo.description;
-    pictureComments.textContent = photo.comments.length;
+    pictureComments.textContent = photo.comments.length; // Общее количество
     pictureLikes.textContent = photo.likes;
 
     fragment.appendChild(pictureElement);
