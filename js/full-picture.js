@@ -14,7 +14,7 @@ const COMMENTS_PER_PORTION = 5;
 let currentComments = [];
 let shownCommentsCount = 0;
 
-function createComment(comment) {
+const createComment = (comment) => {
   const commentElement = document.createElement('li');
   commentElement.classList.add('social__comment');
 
@@ -31,14 +31,14 @@ function createComment(comment) {
   commentElement.appendChild(text);
 
   return commentElement;
-}
+};
 
-function updateCommentsCounter() {
+const updateCommentsCounter = () => {
   commentShownCount.textContent = shownCommentsCount;
   commentTotalCount.textContent = currentComments.length;
-}
+};
 
-function showNextComments() {
+const showNextComments = () => {
   const nextCommentsCount = Math.min(
     COMMENTS_PER_PORTION,
     currentComments.length - shownCommentsCount
@@ -61,15 +61,15 @@ function showNextComments() {
   } else {
     commentsLoader.classList.remove('hidden');
   }
-}
+};
 
-function renderComments(comments) {
+const renderComments = (comments) => {
   socialComments.innerHTML = '';
   currentComments = comments;
   shownCommentsCount = 0;
   commentCount.classList.remove('hidden');
   showNextComments();
-}
+};
 
 function closeFullPicture() {
   bigPicture.classList.add('hidden');
@@ -82,20 +82,20 @@ function closeFullPicture() {
   shownCommentsCount = 0;
 }
 
-function escKeydownHandler(evt) {
+const escKeydownHandler = (evt) => {
   if (evt.key === 'Escape' && !bigPicture.classList.contains('hidden')) {
     evt.preventDefault();
     closeFullPicture();
   }
-}
+};
 
-function overlayClickHandler(evt) {
+const overlayClickHandler = (evt) => {
   if (evt.target === bigPicture) {
     closeFullPicture();
   }
-}
+};
 
-function openFullPicture(photo) {
+const openFullPicture = (photo) => {
   bigPictureImage.src = photo.url;
   bigPictureImage.alt = photo.description;
   likesCount.textContent = photo.likes;
@@ -107,6 +107,6 @@ function openFullPicture(photo) {
   bigPicture.addEventListener('click', overlayClickHandler);
   cancelButton.addEventListener('click', closeFullPicture);
   commentsLoader.addEventListener('click', showNextComments);
-}
+};
 
 export { openFullPicture, closeFullPicture };
