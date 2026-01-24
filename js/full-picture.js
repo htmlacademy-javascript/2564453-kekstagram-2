@@ -82,18 +82,18 @@ function closeFullPicture() {
   shownCommentsCount = 0;
 }
 
-const escKeydownHandler = (evt) => {
+function escKeydownHandler(evt) {
   if (evt.key === 'Escape' && !bigPicture.classList.contains('hidden')) {
     evt.preventDefault();
     closeFullPicture();
   }
-};
+}
 
-const overlayClickHandler = (evt) => {
+function overlayClickHandler(evt) {
   if (evt.target === bigPicture) {
     closeFullPicture();
   }
-};
+}
 
 const openFullPicture = (photo) => {
   bigPictureImage.src = photo.url;
