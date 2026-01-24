@@ -1,9 +1,8 @@
 import { createPhotosArray } from './data.js';
+import { initPictureThumbnails } from './picture-thumbnails.js';
+import { initGallery } from './gallery.js';
 
-// Создаем массив фотографий
 window.photosArray = createPhotosArray();
 
-import { initPictureThumbnails } from './picture-thumbnails.js';
-
-//Отрисовка миниатюр
 initPictureThumbnails();
+initGallery();
