@@ -1,3 +1,5 @@
+import Pristine from '../vendor/pristine/pristine-esm.js';
+
 const uploadForm = document.querySelector('.img-upload__form');
 const hashtagsInput = uploadForm.querySelector('.text__hashtags');
 const descriptionInput = uploadForm.querySelector('.text__description');
@@ -100,7 +102,7 @@ const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
 
 const getCommentErrorMessage = () => `Комментарий не может быть длиннее ${MAX_COMMENT_LENGTH} символов`;
 
-const pristine = new window.Pristine(uploadForm, {
+const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorClass: 'img-upload__field-wrapper--invalid',
   successClass: 'img-upload__field-wrapper--valid',
