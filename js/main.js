@@ -1,16 +1,21 @@
-// main.js
 import { closeUploadForm } from './upload-form.js';
 import { initPictureThumbnails } from './picture-thumbnails.js';
 import { initGallery } from './gallery.js';
-import { createPhotosArray } from './data.js';
 import { resetEditor } from './image-editor.js';
+import { getData } from './api.js';
+import { showAlert } from './alert.js';
 
-// Инициализация данных
-window.photosArray = createPhotosArray();
+const initApp = async () => {
+  try {
+    window.photosArray = await getData();
+    initPictureThumbnails();
+    initGallery();
+  } catch (error) {
+    showAlert(error.message, 'data-error');
+    window.photosArray = [];
+  }
+};
 
-// Инициализация галереи
-initGallery();
-initPictureThumbnails();
+initApp();
 
-//для использования в других модулях
 export { closeUploadForm, resetEditor };

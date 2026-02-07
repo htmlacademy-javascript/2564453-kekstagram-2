@@ -1,3 +1,5 @@
+import Pristine from '../vendor/pristine/pristine-esm.js';
+
 const uploadForm = document.querySelector('.img-upload__form');
 const hashtagsInput = uploadForm.querySelector('.text__hashtags');
 const descriptionInput = uploadForm.querySelector('.text__description');
@@ -100,7 +102,7 @@ const validateComment = (value) => value.length <= MAX_COMMENT_LENGTH;
 
 const getCommentErrorMessage = () => `Комментарий не может быть длиннее ${MAX_COMMENT_LENGTH} символов`;
 
-const pristine = new window.Pristine(uploadForm, {
+const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
   errorClass: 'img-upload__field-wrapper--invalid',
   successClass: 'img-upload__field-wrapper--valid',
@@ -109,10 +111,11 @@ const pristine = new window.Pristine(uploadForm, {
   errorTextClass: 'img-upload__error-text'
 });
 
+window.pristine = pristine;
+
 pristine.addValidator(hashtagsInput, validateHashtags, getHashtagErrorMessage);
 pristine.addValidator(descriptionInput, validateComment, getCommentErrorMessage);
 
-// Esc не закрывает форму при фокусе в полях
 const onHashtagsKeydown = (evt) => {
   if (evt.key === 'Escape') {
     evt.stopPropagation();
@@ -125,23 +128,14 @@ const onCommentKeydown = (evt) => {
   }
 };
 
-// Обработчик отправки формы
-const onFormSubmit = (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
-  }
-};
-
 const initFormValidation = () => {
   pristine.reset();
-  uploadForm.addEventListener('submit', onFormSubmit);
   hashtagsInput.addEventListener('keydown', onHashtagsKeydown);
   descriptionInput.addEventListener('keydown', onCommentKeydown);
 };
 
 const resetFormValidation = () => {
   pristine.reset();
-  uploadForm.removeEventListener('submit', onFormSubmit);
   hashtagsInput.removeEventListener('keydown', onHashtagsKeydown);
   descriptionInput.removeEventListener('keydown', onCommentKeydown);
 };
