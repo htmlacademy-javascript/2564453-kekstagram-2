@@ -12,7 +12,7 @@ const Method = {
 
 const ErrorText = {
   [Method.GET]: 'Не удалось загрузить данные. Попробуйте еще раз',
-  [Method.POST]: 'Ошибка отправки'
+  [Method.POST]: 'Ошибка отправки данных'
 };
 
 const load = async (route, method = Method.GET, body = null) => {
