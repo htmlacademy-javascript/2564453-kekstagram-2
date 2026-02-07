@@ -1,0 +1,175 @@
+import { initEditor, resetEditor } from './image-editor.js';
+import { initFormValidation, resetFormValidation } from './form-validation.js';
+import { sendData } from './api.js';
+import { showAlert } from './alert.js';
+
+const uploadInput = document.querySelector('.img-upload__input');
+const uploadOverlay = document.querySelector('.img-upload__overlay');
+const uploadCancelButton = document.querySelector('.img-upload__cancel');
+const uploadForm = document.querySelector('.img-upload__form');
+const body = document.body;
+const submitButton = uploadForm.querySelector('.img-upload__submit');
+
+let isSending = false;
+
+const blockForm = () => {
+  isSending = true;
+  submitButton.disabled = true;
+  submitButton.textContent = 'Отправляю...';
+  submitButton.classList.add('img-upload__submit--disabled');
+  uploadInput.disabled = true;
+  uploadCancelButton.disabled = true;
+
+  const formControls = uploadForm.querySelectorAll('input, textarea, button:not(.img-upload__submit)');
+  formControls.forEach((control) => {
+    control.disabled = true;
+  });
+};
+
+const unblockForm = () => {
+  isSending = false;
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+  submitButton.classList.remove('img-upload__submit--disabled');
+  uploadInput.disabled = false;
+  uploadCancelButton.disabled = false;
+
+  const formControls = uploadForm.querySelectorAll('input, textarea, button:not(.img-upload__submit)');
+  formControls.forEach((control) => {
+    control.disabled = false;
+  });
+};
+
+const resetForm = () => {
+  uploadForm.reset();
+  uploadInput.value = '';
+
+  const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
+  if (previewImg) {
+    previewImg.src = 'img/upload-default-image.jpg';
+  }
+
+  resetEditor();
+  resetFormValidation();
+  unblockForm();
+};
+
+const onSuccess = () => {
+  showAlert('Фото загружено!', 'success');
+  closeUploadForm();
+  unblockForm();
+};
+
+const onError = (message) => {
+  showAlert(message, 'error');
+  unblockForm();
+};
+
+async function onFormSubmit(evt) {
+  evt.preventDefault();
+
+  if (isSending) {
+    return;
+  }
+
+  if (window.pristine && !window.pristine.validate()) {
+    return;
+  }
+
+  blockForm();
+
+  const formData = new FormData();
+
+  const file = uploadInput.files[0];
+  if (file) {
+    formData.append('filename', file);
+  } else {
+    onError('Выберите фото для загрузки');
+    unblockForm();
+    return;
+  }
+
+  const scaleInput = document.querySelector('.scale__control--value');
+  formData.append('scale', scaleInput ? scaleInput.value : '100%');
+
+  const effectInput = document.querySelector('.effects__radio:checked');
+  formData.append('effect', effectInput ? effectInput.value : 'none');
+
+  const hashtags = uploadForm.querySelector('.text__hashtags').value;
+  const description = uploadForm.querySelector('.text__description').value;
+
+  if (hashtags) {
+    formData.append('hashtags', hashtags);
+  }
+
+  if (description) {
+    formData.append('description', description);
+  }
+
+  try {
+    await sendData(formData);
+    onSuccess();
+  } catch (error) {
+    onError(error.message);
+  }
+}
+
+function closeUploadForm() {
+  uploadOverlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  resetForm();
+  document.removeEventListener('keydown', escKeydownHandler);
+  uploadOverlay.removeEventListener('click', overlayClickHandler);
+  uploadCancelButton.removeEventListener('click', closeUploadForm);
+  uploadForm.removeEventListener('submit', onFormSubmit);
+}
+
+function escKeydownHandler(evt) {
+  if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
+    evt.preventDefault();
+    closeUploadForm();
+  }
+}
+
+function overlayClickHandler(evt) {
+  if (evt.target === uploadOverlay) {
+    closeUploadForm();
+  }
+}
+
+const handleFileChange = () => {
+  const file = uploadInput.files[0];
+  if (file) {
+    if (file.type.startsWith('image/')) {
+      uploadOverlay.classList.remove('hidden');
+      body.classList.add('modal-open');
+      initEditor();
+      initFormValidation();
+      document.addEventListener('keydown', escKeydownHandler);
+      uploadOverlay.addEventListener('click', overlayClickHandler);
+      uploadCancelButton.addEventListener('click', closeUploadForm);
+      uploadForm.addEventListener('submit', onFormSubmit);
+      const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+      };
+
+      reader.onerror = () => {
+        showAlert('Ошибка чтения файла', 'error');
+        closeUploadForm();
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      showAlert('Только изображения!', 'error');
+      uploadInput.value = '';
+    }
+  }
+};
+
+uploadCancelButton.addEventListener('click', closeUploadForm);
+uploadInput.addEventListener('change', handleFileChange);
+
+export { closeUploadForm, resetForm, onFormSubmit };
