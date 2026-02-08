@@ -75,6 +75,19 @@ const onError = (message) => {
   unblockForm();
 };
 
+const escKeydownHandler = (evt) => {
+  if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
+    evt.preventDefault();
+    closeUploadForm();
+  }
+};
+
+const overlayClickHandler = (evt) => {
+  if (evt.target === uploadOverlay) {
+    closeUploadForm();
+  }
+};
+
 async function onFormSubmit(evt) {
   evt.preventDefault();
 
@@ -132,19 +145,6 @@ function closeUploadForm() {
   uploadOverlay.removeEventListener('click', overlayClickHandler);
   uploadCancelButton.removeEventListener('click', closeUploadForm);
   uploadForm.removeEventListener('submit', onFormSubmit);
-}
-
-function escKeydownHandler(evt) {
-  if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
-    evt.preventDefault();
-    closeUploadForm();
-  }
-}
-
-function overlayClickHandler(evt) {
-  if (evt.target === uploadOverlay) {
-    closeUploadForm();
-  }
 }
 
 const updateEffectPreviews = (imageUrl) => {
