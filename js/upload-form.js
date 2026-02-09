@@ -55,6 +55,9 @@ const resetForm = () => {
 
   const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
   if (previewImg) {
+    if (previewImg.src.startsWith('blob:')) {
+      URL.revokeObjectURL(previewImg.src);
+    }
     previewImg.src = 'img/upload-default-image.jpg';
   }
 
@@ -67,7 +70,6 @@ const resetForm = () => {
 const onSuccess = () => {
   showAlert('Фото загружено!', 'success');
   closeUploadForm();
-  unblockForm();
 };
 
 const onError = (message) => {
@@ -77,6 +79,12 @@ const onError = (message) => {
 
 const escKeydownHandler = (evt) => {
   if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
+    const errorMessage = document.querySelector('.error');
+
+    if (errorMessage) {
+      return;
+    }
+
     evt.preventDefault();
     closeUploadForm();
   }
@@ -84,6 +92,11 @@ const escKeydownHandler = (evt) => {
 
 const overlayClickHandler = (evt) => {
   if (evt.target === uploadOverlay) {
+    const errorMessage = document.querySelector('.error');
+    if (errorMessage) {
+      return;
+    }
+
     closeUploadForm();
   }
 };
@@ -159,21 +172,12 @@ const handleFileChange = () => {
   const file = uploadInput.files[0];
   if (file) {
     if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
+      const imageUrl = URL.createObjectURL(file);
 
-      reader.onload = (e) => {
-        const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
-        previewImg.src = e.target.result;
+      const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
+      previewImg.src = imageUrl;
 
-        updateEffectPreviews(e.target.result);
-      };
-
-      reader.onerror = () => {
-        showAlert('Ошибка чтения файла', 'error');
-        closeUploadForm();
-      };
-
-      reader.readAsDataURL(file);
+      updateEffectPreviews(imageUrl);
 
       uploadOverlay.classList.remove('hidden');
       body.classList.add('modal-open');
