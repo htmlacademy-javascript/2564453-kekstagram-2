@@ -74,16 +74,24 @@ const setActiveFilter = (filterId) => {
 const onFilterClick = (photos, evt) => {
   const clickedButton = evt.target;
 
-  if (!clickedButton.classList.contains('img-filters__button') ||
-      clickedButton.id === currentFilter) {
+  if (!clickedButton.classList.contains('img-filters__button')) {
     return;
   }
 
-  currentFilter = clickedButton.id;
+  const clickedFilter = clickedButton.id;
 
-  setActiveFilter(currentFilter);
+  if (clickedFilter === 'filter-random') {
+    currentFilter = clickedFilter;
+    setActiveFilter(currentFilter);
+    updatePhotosDebounced(photos);
+    return;
+  }
 
-  updatePhotosDebounced(photos);
+  if (clickedFilter !== currentFilter) {
+    currentFilter = clickedFilter;
+    setActiveFilter(currentFilter);
+    updatePhotosDebounced(photos);
+  }
 };
 
 const initFilters = (photos) => {

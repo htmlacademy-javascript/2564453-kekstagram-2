@@ -107,7 +107,7 @@ async function onFormSubmit(evt) {
   if (file) {
     formData.append('filename', file);
   } else {
-    onError('Выберите фото для загрузки');
+    onError('Выберите изображение для загрузки');
     unblockForm();
     return;
   }
