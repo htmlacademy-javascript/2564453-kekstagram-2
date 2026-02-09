@@ -1431,15 +1431,7 @@ main {
 }
 
 /*сообщения ошибок*/
-.img-upload__field-wrapper {
-  position: relative;
-}
-
 .img-upload__error-text {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
   z-index: 10;
   background-color: #ff3333e1;
   padding: 5px 8px;

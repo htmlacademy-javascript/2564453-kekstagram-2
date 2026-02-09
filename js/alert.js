@@ -13,9 +13,7 @@ const showAlert = (message, alertType = 'data-error') => {
   }
 
   const templateId = ALERT_TEMPLATES[alertType] || 'data-error';
-
   const template = document.querySelector(`#${templateId}`);
-
   const alertElement = template.content.cloneNode(true);
 
   const titleElement = alertElement.querySelector(`.${alertType}__title`);
@@ -26,23 +24,45 @@ const showAlert = (message, alertType = 'data-error') => {
   document.body.appendChild(alertElement);
 
   const addedAlert = document.querySelector(`.${alertType}`);
-
   if (!addedAlert) {
     return;
   }
 
+  const closeAlert = () => {
+    if (addedAlert.dataset.timeoutId) {
+      clearTimeout(parseInt(addedAlert.dataset.timeoutId, 10));
+    }
+    addedAlert.remove();
+  };
+
   const closeButton = addedAlert.querySelector(`.${alertType}__button`);
   if (closeButton) {
-    closeButton.addEventListener('click', () => {
-      addedAlert.remove();
-    });
-
+    closeButton.addEventListener('click', closeAlert);
     closeButton.focus();
   }
 
+  const escKeydownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      closeAlert();
+      document.removeEventListener('keydown', escKeydownHandler);
+    }
+  };
+
+  const overlayClickHandler = (evt) => {
+    if (evt.target === addedAlert) {
+      closeAlert();
+      addedAlert.removeEventListener('click', overlayClickHandler);
+    }
+  };
+
+  document.addEventListener('keydown', escKeydownHandler);
+  addedAlert.addEventListener('click', overlayClickHandler);
+
   const alertTimeout = setTimeout(() => {
     if (document.body.contains(addedAlert)) {
-      addedAlert.remove();
+      closeAlert();
+      document.removeEventListener('keydown', escKeydownHandler);
+      addedAlert.removeEventListener('click', overlayClickHandler);
     }
   }, ALERT_SHOW_TIME);
 
