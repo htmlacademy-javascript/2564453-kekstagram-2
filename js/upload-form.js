@@ -40,6 +40,15 @@ const unblockForm = () => {
   });
 };
 
+const resetEffectPreviews = () => {
+  const effectPreviews = document.querySelectorAll('.effects__preview');
+  const defaultImage = 'img/upload-default-image.jpg';
+
+  effectPreviews.forEach((preview) => {
+    preview.style.backgroundImage = `url(${defaultImage})`;
+  });
+};
+
 const resetForm = () => {
   uploadForm.reset();
   uploadInput.value = '';
@@ -49,6 +58,7 @@ const resetForm = () => {
     previewImg.src = 'img/upload-default-image.jpg';
   }
 
+  resetEffectPreviews();
   resetEditor();
   resetFormValidation();
   unblockForm();
@@ -63,6 +73,19 @@ const onSuccess = () => {
 const onError = (message) => {
   showAlert(message, 'error');
   unblockForm();
+};
+
+const escKeydownHandler = (evt) => {
+  if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
+    evt.preventDefault();
+    closeUploadForm();
+  }
+};
+
+const overlayClickHandler = (evt) => {
+  if (evt.target === uploadOverlay) {
+    closeUploadForm();
+  }
 };
 
 async function onFormSubmit(evt) {
@@ -124,36 +147,25 @@ function closeUploadForm() {
   uploadForm.removeEventListener('submit', onFormSubmit);
 }
 
-function escKeydownHandler(evt) {
-  if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
-    evt.preventDefault();
-    closeUploadForm();
-  }
-}
+const updateEffectPreviews = (imageUrl) => {
+  const effectPreviews = document.querySelectorAll('.effects__preview');
 
-function overlayClickHandler(evt) {
-  if (evt.target === uploadOverlay) {
-    closeUploadForm();
-  }
-}
+  effectPreviews.forEach((preview) => {
+    preview.style.backgroundImage = `url(${imageUrl})`;
+  });
+};
 
 const handleFileChange = () => {
   const file = uploadInput.files[0];
   if (file) {
     if (file.type.startsWith('image/')) {
-      uploadOverlay.classList.remove('hidden');
-      body.classList.add('modal-open');
-      initEditor();
-      initFormValidation();
-      document.addEventListener('keydown', escKeydownHandler);
-      uploadOverlay.addEventListener('click', overlayClickHandler);
-      uploadCancelButton.addEventListener('click', closeUploadForm);
-      uploadForm.addEventListener('submit', onFormSubmit);
-      const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
       const reader = new FileReader();
 
       reader.onload = (e) => {
+        const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
         previewImg.src = e.target.result;
+
+        updateEffectPreviews(e.target.result);
       };
 
       reader.onerror = () => {
@@ -162,6 +174,16 @@ const handleFileChange = () => {
       };
 
       reader.readAsDataURL(file);
+
+      uploadOverlay.classList.remove('hidden');
+      body.classList.add('modal-open');
+      initEditor();
+      initFormValidation();
+      document.addEventListener('keydown', escKeydownHandler);
+      uploadOverlay.addEventListener('click', overlayClickHandler);
+      uploadCancelButton.addEventListener('click', closeUploadForm);
+      uploadForm.addEventListener('submit', onFormSubmit);
+
     } else {
       showAlert('Только изображения!', 'error');
       uploadInput.value = '';

@@ -71,6 +71,19 @@ const renderComments = (comments) => {
   showNextComments();
 };
 
+const escKeydownHandler = (evt) => {
+  if (evt.key === 'Escape' && !bigPicture.classList.contains('hidden')) {
+    evt.preventDefault();
+    closeFullPicture();
+  }
+};
+
+const overlayClickHandler = (evt) => {
+  if (evt.target === bigPicture) {
+    closeFullPicture();
+  }
+};
+
 function closeFullPicture() {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
@@ -80,19 +93,6 @@ function closeFullPicture() {
   commentsLoader.removeEventListener('click', showNextComments);
   currentComments = [];
   shownCommentsCount = 0;
-}
-
-function escKeydownHandler(evt) {
-  if (evt.key === 'Escape' && !bigPicture.classList.contains('hidden')) {
-    evt.preventDefault();
-    closeFullPicture();
-  }
-}
-
-function overlayClickHandler(evt) {
-  if (evt.target === bigPicture) {
-    closeFullPicture();
-  }
 }
 
 const openFullPicture = (photo) => {
