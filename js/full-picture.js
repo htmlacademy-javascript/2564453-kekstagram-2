@@ -1,3 +1,4 @@
+const COMMENTS_PER_PORTION = 5;
 const bigPicture = document.querySelector('.big-picture');
 const bigPictureImage = bigPicture.querySelector('.big-picture__img img');
 const likesCount = bigPicture.querySelector('.likes-count');
@@ -10,7 +11,6 @@ const commentCount = document.querySelector('.social__comment-count');
 const cancelButton = bigPicture.querySelector('.big-picture__cancel');
 const body = document.body;
 
-const COMMENTS_PER_PORTION = 5;
 let currentComments = [];
 let shownCommentsCount = 0;
 

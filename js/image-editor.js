@@ -1,21 +1,9 @@
 import '../vendor/nouislider/nouislider.js';
 
-const scaleSmallerButton = document.querySelector('.scale__control--smaller');
-const scaleBiggerButton = document.querySelector('.scale__control--bigger');
-const scaleValueInput = document.querySelector('.scale__control--value');
-const imagePreview = document.querySelector('.img-upload__preview img');
-const effectLevelValue = document.querySelector('.effect-level__value');
-const effectLevelSliderContainer = document.querySelector('.img-upload__effect-level');
-const effectLevelSlider = document.querySelector('.effect-level__slider');
-const effectsList = document.querySelector('.effects__list');
-
-// Константы для масштабирования
 const SCALE_STEP = 25;
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const SCALE_DEFAULT = 100;
-
-// Константы для эффектов
 const EFFECTS = {
   none: {
     name: 'none',
@@ -66,6 +54,14 @@ const EFFECTS = {
     unit: '',
   },
 };
+const scaleSmallerButton = document.querySelector('.scale__control--smaller');
+const scaleBiggerButton = document.querySelector('.scale__control--bigger');
+const scaleValueInput = document.querySelector('.scale__control--value');
+const imagePreview = document.querySelector('.img-upload__preview img');
+const effectLevelValue = document.querySelector('.effect-level__value');
+const effectLevelSliderContainer = document.querySelector('.img-upload__effect-level');
+const effectLevelSlider = document.querySelector('.effect-level__slider');
+const effectsList = document.querySelector('.effects__list');
 
 let currentScale = SCALE_DEFAULT;
 let currentEffect = EFFECTS.none;
