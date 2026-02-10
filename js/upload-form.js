@@ -16,31 +16,23 @@ const descriptionInput = uploadForm.querySelector('.text__description');
 
 let isSending = false;
 
-const blockForm = () => {
-  isSending = true;
-  submitButton.disabled = true;
-  submitButton.textContent = 'Отправляю...';
-  submitButton.classList.add('img-upload__submit--disabled');
-  uploadInput.disabled = true;
-  uploadCancelButton.disabled = true;
+const setFormState = (blocked) => {
+  isSending = blocked;
+  submitButton.disabled = blocked;
+  submitButton.textContent = blocked ? 'Отправляю...' : 'Опубликовать';
+
+  if (blocked) {
+    submitButton.classList.add('img-upload__submit--disabled');
+  } else {
+    submitButton.classList.remove('img-upload__submit--disabled');
+  }
+
+  uploadInput.disabled = blocked;
+  uploadCancelButton.disabled = blocked;
 
   const formControls = uploadForm.querySelectorAll('input, textarea, button:not(.img-upload__submit)');
   formControls.forEach((control) => {
-    control.disabled = true;
-  });
-};
-
-const unblockForm = () => {
-  isSending = false;
-  submitButton.disabled = false;
-  submitButton.textContent = 'Опубликовать';
-  submitButton.classList.remove('img-upload__submit--disabled');
-  uploadInput.disabled = false;
-  uploadCancelButton.disabled = false;
-
-  const formControls = uploadForm.querySelectorAll('input, textarea, button:not(.img-upload__submit)');
-  formControls.forEach((control) => {
-    control.disabled = false;
+    control.disabled = blocked;
   });
 };
 
@@ -67,7 +59,7 @@ const resetForm = () => {
   resetEffectPreviews();
   resetEditor();
   resetFormValidation();
-  unblockForm();
+  setFormState(false);
 };
 
 const onSuccess = () => {
@@ -77,7 +69,7 @@ const onSuccess = () => {
 
 const onError = (message) => {
   showAlert(message, 'error');
-  unblockForm();
+  setFormState(false);
 };
 
 const onDocumentKeydown = (evt) => {
@@ -115,7 +107,7 @@ async function onFormSubmit(evt) {
     return;
   }
 
-  blockForm();
+  setFormState(true);
 
   const formData = new FormData();
 
@@ -124,7 +116,6 @@ async function onFormSubmit(evt) {
     formData.append('filename', file);
   } else {
     onError('Выберите изображение для загрузки');
-    unblockForm();
     return;
   }
 
