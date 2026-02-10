@@ -1,14 +1,12 @@
 import Pristine from '../vendor/pristine/pristine-esm.js';
 
-const uploadForm = document.querySelector('.img-upload__form');
-const hashtagsInput = uploadForm.querySelector('.text__hashtags');
-const descriptionInput = uploadForm.querySelector('.text__description');
-
 const MAX_HASHTAGS = 5;
 const MAX_HASHTAG_LENGTH = 20;
 const MAX_COMMENT_LENGTH = 140;
-
 const HASHTAG_REGEX = /^#[a-zа-яё0-9]{1,19}$/i;
+const uploadForm = document.querySelector('.img-upload__form');
+const hashtagsInput = uploadForm.querySelector('.text__hashtags');
+const descriptionInput = uploadForm.querySelector('.text__description');
 
 const normalizeHashtags = (hashtagsString) => hashtagsString
   .toLowerCase()
@@ -60,7 +58,6 @@ const validateHashtags = (value) => {
   return true;
 };
 
-// Сообщения об ошибках
 const getHashtagErrorMessage = (value) => {
   const hashtags = normalizeHashtags(value);
 

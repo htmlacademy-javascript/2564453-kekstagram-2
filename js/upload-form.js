@@ -9,34 +9,30 @@ const uploadCancelButton = document.querySelector('.img-upload__cancel');
 const uploadForm = document.querySelector('.img-upload__form');
 const body = document.body;
 const submitButton = uploadForm.querySelector('.img-upload__submit');
+const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
+const scaleInput = document.querySelector('.scale__control--value');
+const hashtagsInput = uploadForm.querySelector('.text__hashtags');
+const descriptionInput = uploadForm.querySelector('.text__description');
 
 let isSending = false;
 
-const blockForm = () => {
-  isSending = true;
-  submitButton.disabled = true;
-  submitButton.textContent = 'Отправляю...';
-  submitButton.classList.add('img-upload__submit--disabled');
-  uploadInput.disabled = true;
-  uploadCancelButton.disabled = true;
+const setFormState = (blocked) => {
+  isSending = blocked;
+  submitButton.disabled = blocked;
+  submitButton.textContent = blocked ? 'Отправляю...' : 'Опубликовать';
+
+  if (blocked) {
+    submitButton.classList.add('img-upload__submit--disabled');
+  } else {
+    submitButton.classList.remove('img-upload__submit--disabled');
+  }
+
+  uploadInput.disabled = blocked;
+  uploadCancelButton.disabled = blocked;
 
   const formControls = uploadForm.querySelectorAll('input, textarea, button:not(.img-upload__submit)');
   formControls.forEach((control) => {
-    control.disabled = true;
-  });
-};
-
-const unblockForm = () => {
-  isSending = false;
-  submitButton.disabled = false;
-  submitButton.textContent = 'Опубликовать';
-  submitButton.classList.remove('img-upload__submit--disabled');
-  uploadInput.disabled = false;
-  uploadCancelButton.disabled = false;
-
-  const formControls = uploadForm.querySelectorAll('input, textarea, button:not(.img-upload__submit)');
-  formControls.forEach((control) => {
-    control.disabled = false;
+    control.disabled = blocked;
   });
 };
 
@@ -53,7 +49,6 @@ const resetForm = () => {
   uploadForm.reset();
   uploadInput.value = '';
 
-  const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
   if (previewImg) {
     if (previewImg.src.startsWith('blob:')) {
       URL.revokeObjectURL(previewImg.src);
@@ -64,7 +59,7 @@ const resetForm = () => {
   resetEffectPreviews();
   resetEditor();
   resetFormValidation();
-  unblockForm();
+  setFormState(false);
 };
 
 const onSuccess = () => {
@@ -74,10 +69,10 @@ const onSuccess = () => {
 
 const onError = (message) => {
   showAlert(message, 'error');
-  unblockForm();
+  setFormState(false);
 };
 
-const escKeydownHandler = (evt) => {
+const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
     const errorMessage = document.querySelector('.error');
 
@@ -90,7 +85,7 @@ const escKeydownHandler = (evt) => {
   }
 };
 
-const overlayClickHandler = (evt) => {
+const onOverlayClick = (evt) => {
   if (evt.target === uploadOverlay) {
     const errorMessage = document.querySelector('.error');
     if (errorMessage) {
@@ -112,7 +107,7 @@ async function onFormSubmit(evt) {
     return;
   }
 
-  blockForm();
+  setFormState(true);
 
   const formData = new FormData();
 
@@ -121,18 +116,16 @@ async function onFormSubmit(evt) {
     formData.append('filename', file);
   } else {
     onError('Выберите изображение для загрузки');
-    unblockForm();
     return;
   }
 
-  const scaleInput = document.querySelector('.scale__control--value');
   formData.append('scale', scaleInput ? scaleInput.value : '100%');
 
   const effectInput = document.querySelector('.effects__radio:checked');
   formData.append('effect', effectInput ? effectInput.value : 'none');
 
-  const hashtags = uploadForm.querySelector('.text__hashtags').value;
-  const description = uploadForm.querySelector('.text__description').value;
+  const hashtags = hashtagsInput ? hashtagsInput.value : '';
+  const description = descriptionInput ? descriptionInput.value : '';
 
   if (hashtags) {
     formData.append('hashtags', hashtags);
@@ -154,8 +147,8 @@ function closeUploadForm() {
   uploadOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   resetForm();
-  document.removeEventListener('keydown', escKeydownHandler);
-  uploadOverlay.removeEventListener('click', overlayClickHandler);
+  document.removeEventListener('keydown', onDocumentKeydown);
+  uploadOverlay.removeEventListener('click', onOverlayClick);
   uploadCancelButton.removeEventListener('click', closeUploadForm);
   uploadForm.removeEventListener('submit', onFormSubmit);
 }
@@ -168,14 +161,15 @@ const updateEffectPreviews = (imageUrl) => {
   });
 };
 
-const handleFileChange = () => {
+const onFileInputChange = () => {
   const file = uploadInput.files[0];
   if (file) {
     if (file.type.startsWith('image/')) {
       const imageUrl = URL.createObjectURL(file);
 
-      const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
-      previewImg.src = imageUrl;
+      if (previewImg) {
+        previewImg.src = imageUrl;
+      }
 
       updateEffectPreviews(imageUrl);
 
@@ -183,8 +177,8 @@ const handleFileChange = () => {
       body.classList.add('modal-open');
       initEditor();
       initFormValidation();
-      document.addEventListener('keydown', escKeydownHandler);
-      uploadOverlay.addEventListener('click', overlayClickHandler);
+      document.addEventListener('keydown', onDocumentKeydown);
+      uploadOverlay.addEventListener('click', onOverlayClick);
       uploadCancelButton.addEventListener('click', closeUploadForm);
       uploadForm.addEventListener('submit', onFormSubmit);
 
@@ -196,6 +190,6 @@ const handleFileChange = () => {
 };
 
 uploadCancelButton.addEventListener('click', closeUploadForm);
-uploadInput.addEventListener('change', handleFileChange);
+uploadInput.addEventListener('change', onFileInputChange);
 
 export { closeUploadForm, resetForm, onFormSubmit };
