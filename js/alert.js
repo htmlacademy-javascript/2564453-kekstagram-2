@@ -55,28 +55,28 @@ const showAlert = (message, alertType = 'data-error') => {
     closeButton.focus();
   }
 
-  const escKeydownHandler = (evt) => {
+  const onDocumentKeydown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       closeAlert();
-      document.removeEventListener('keydown', escKeydownHandler);
+      document.removeEventListener('keydown', onDocumentKeydown);
     }
   };
 
-  const overlayClickHandler = (evt) => {
+  const onOverlayClick = (evt) => {
     if (evt.target === addedAlert) {
       closeAlert();
-      addedAlert.removeEventListener('click', overlayClickHandler);
+      addedAlert.removeEventListener('click', onOverlayClick);
     }
   };
 
-  document.addEventListener('keydown', escKeydownHandler);
-  addedAlert.addEventListener('click', overlayClickHandler);
+  document.addEventListener('keydown', onDocumentKeydown);
+  addedAlert.addEventListener('click', onOverlayClick);
 
   const alertTimeout = setTimeout(() => {
     if (document.body.contains(addedAlert)) {
       closeAlert();
-      document.removeEventListener('keydown', escKeydownHandler);
-      addedAlert.removeEventListener('click', overlayClickHandler);
+      document.removeEventListener('keydown', onDocumentKeydown);
+      addedAlert.removeEventListener('click', onOverlayClick);
     }
   }, ALERT_SHOW_TIME);
 

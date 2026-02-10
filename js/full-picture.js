@@ -71,14 +71,14 @@ const renderComments = (comments) => {
   showNextComments();
 };
 
-const escKeydownHandler = (evt) => {
+const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape' && !bigPicture.classList.contains('hidden')) {
     evt.preventDefault();
     closeFullPicture();
   }
 };
 
-const overlayClickHandler = (evt) => {
+const onOverlayClick = (evt) => {
   if (evt.target === bigPicture) {
     closeFullPicture();
   }
@@ -87,8 +87,8 @@ const overlayClickHandler = (evt) => {
 function closeFullPicture() {
   bigPicture.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', escKeydownHandler);
-  bigPicture.removeEventListener('click', overlayClickHandler);
+  document.removeEventListener('keydown', onDocumentKeydown);
+  bigPicture.removeEventListener('click', onOverlayClick);
   cancelButton.removeEventListener('click', closeFullPicture);
   commentsLoader.removeEventListener('click', showNextComments);
   currentComments = [];
@@ -103,8 +103,8 @@ const openFullPicture = (photo) => {
   renderComments(photo.comments);
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
-  document.addEventListener('keydown', escKeydownHandler);
-  bigPicture.addEventListener('click', overlayClickHandler);
+  document.addEventListener('keydown', onDocumentKeydown);
+  bigPicture.addEventListener('click', onOverlayClick);
   cancelButton.addEventListener('click', closeFullPicture);
   commentsLoader.addEventListener('click', showNextComments);
 };

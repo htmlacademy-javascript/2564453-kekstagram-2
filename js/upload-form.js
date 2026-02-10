@@ -80,7 +80,7 @@ const onError = (message) => {
   unblockForm();
 };
 
-const escKeydownHandler = (evt) => {
+const onDocumentKeydown = (evt) => {
   if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
     const errorMessage = document.querySelector('.error');
 
@@ -93,7 +93,7 @@ const escKeydownHandler = (evt) => {
   }
 };
 
-const overlayClickHandler = (evt) => {
+const onOverlayClick = (evt) => {
   if (evt.target === uploadOverlay) {
     const errorMessage = document.querySelector('.error');
     if (errorMessage) {
@@ -156,8 +156,8 @@ function closeUploadForm() {
   uploadOverlay.classList.add('hidden');
   body.classList.remove('modal-open');
   resetForm();
-  document.removeEventListener('keydown', escKeydownHandler);
-  uploadOverlay.removeEventListener('click', overlayClickHandler);
+  document.removeEventListener('keydown', onDocumentKeydown);
+  uploadOverlay.removeEventListener('click', onOverlayClick);
   uploadCancelButton.removeEventListener('click', closeUploadForm);
   uploadForm.removeEventListener('submit', onFormSubmit);
 }
@@ -170,7 +170,7 @@ const updateEffectPreviews = (imageUrl) => {
   });
 };
 
-const handleFileChange = () => {
+const onFileInputChange = () => {
   const file = uploadInput.files[0];
   if (file) {
     if (file.type.startsWith('image/')) {
@@ -186,8 +186,8 @@ const handleFileChange = () => {
       body.classList.add('modal-open');
       initEditor();
       initFormValidation();
-      document.addEventListener('keydown', escKeydownHandler);
-      uploadOverlay.addEventListener('click', overlayClickHandler);
+      document.addEventListener('keydown', onDocumentKeydown);
+      uploadOverlay.addEventListener('click', onOverlayClick);
       uploadCancelButton.addEventListener('click', closeUploadForm);
       uploadForm.addEventListener('submit', onFormSubmit);
 
@@ -199,6 +199,6 @@ const handleFileChange = () => {
 };
 
 uploadCancelButton.addEventListener('click', closeUploadForm);
-uploadInput.addEventListener('change', handleFileChange);
+uploadInput.addEventListener('change', onFileInputChange);
 
 export { closeUploadForm, resetForm, onFormSubmit };
