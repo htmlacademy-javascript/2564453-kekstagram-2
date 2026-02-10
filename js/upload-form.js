@@ -9,6 +9,10 @@ const uploadCancelButton = document.querySelector('.img-upload__cancel');
 const uploadForm = document.querySelector('.img-upload__form');
 const body = document.body;
 const submitButton = uploadForm.querySelector('.img-upload__submit');
+const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
+const scaleInput = document.querySelector('.scale__control--value');
+const hashtagsInput = uploadForm.querySelector('.text__hashtags');
+const descriptionInput = uploadForm.querySelector('.text__description');
 
 let isSending = false;
 
@@ -53,7 +57,6 @@ const resetForm = () => {
   uploadForm.reset();
   uploadInput.value = '';
 
-  const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
   if (previewImg) {
     if (previewImg.src.startsWith('blob:')) {
       URL.revokeObjectURL(previewImg.src);
@@ -125,14 +128,13 @@ async function onFormSubmit(evt) {
     return;
   }
 
-  const scaleInput = document.querySelector('.scale__control--value');
   formData.append('scale', scaleInput ? scaleInput.value : '100%');
 
   const effectInput = document.querySelector('.effects__radio:checked');
   formData.append('effect', effectInput ? effectInput.value : 'none');
 
-  const hashtags = uploadForm.querySelector('.text__hashtags').value;
-  const description = uploadForm.querySelector('.text__description').value;
+  const hashtags = hashtagsInput ? hashtagsInput.value : '';
+  const description = descriptionInput ? descriptionInput.value : '';
 
   if (hashtags) {
     formData.append('hashtags', hashtags);
@@ -174,8 +176,9 @@ const handleFileChange = () => {
     if (file.type.startsWith('image/')) {
       const imageUrl = URL.createObjectURL(file);
 
-      const previewImg = uploadOverlay.querySelector('.img-upload__preview img');
-      previewImg.src = imageUrl;
+      if (previewImg) {
+        previewImg.src = imageUrl;
+      }
 
       updateEffectPreviews(imageUrl);
 

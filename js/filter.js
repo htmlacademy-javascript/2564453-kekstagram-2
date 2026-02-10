@@ -2,9 +2,9 @@ import { createPictureElement } from './picture-thumbnails.js';
 
 const RANDOM_PHOTOS_COUNT = 10;
 const RERENDER_DELAY = 500;
-
 const filtersContainer = document.querySelector('.img-filters');
 const filterButtons = document.querySelectorAll('.img-filters__button');
+const picturesContainer = document.querySelector('.pictures');
 
 let currentFilter = 'filter-default';
 let timeoutId = null;
@@ -30,7 +30,6 @@ const getFilteredPhotos = (photos, filterType) => {
   }
 };
 
-// для перерисовки фото с учетом фильтра
 const renderFilteredPhotos = (photos) => {
   const filteredPhotos = getFilteredPhotos(photos, currentFilter);
 
@@ -44,11 +43,9 @@ const renderFilteredPhotos = (photos) => {
     fragment.appendChild(pictureElement);
   });
 
-  const picturesContainer = document.querySelector('.pictures');
   picturesContainer.appendChild(fragment);
 };
 
-// для обновления фото с устранением дребезга
 const updatePhotosDebounced = (photos) => {
   if (timeoutId) {
     clearTimeout(timeoutId);
@@ -95,6 +92,10 @@ const onFilterClick = (photos, evt) => {
 };
 
 const initFilters = (photos) => {
+  if (!filtersContainer || !picturesContainer) {
+    return;
+  }
+
   filtersContainer.classList.remove('img-filters--inactive');
 
   filterButtons.forEach((button) => {

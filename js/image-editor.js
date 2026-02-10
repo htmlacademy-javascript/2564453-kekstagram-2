@@ -54,6 +54,7 @@ const EFFECTS = {
     unit: '',
   },
 };
+
 const scaleSmallerButton = document.querySelector('.scale__control--smaller');
 const scaleBiggerButton = document.querySelector('.scale__control--bigger');
 const scaleValueInput = document.querySelector('.scale__control--value');
@@ -67,7 +68,6 @@ let currentScale = SCALE_DEFAULT;
 let currentEffect = EFFECTS.none;
 let slider = null;
 
-//Масштабирование изображения
 const updateScale = () => {
   scaleValueInput.value = `${currentScale}%`;
   imagePreview.style.transform = `scale(${currentScale / 100})`;
@@ -92,7 +92,6 @@ const resetScale = () => {
   updateScale();
 };
 
-//Наложение эффектов на изображение
 const updateEffect = (value) => {
   if (currentEffect.name === 'none') {
     imagePreview.style.filter = 'none';
@@ -108,7 +107,6 @@ const createSlider = () => {
     slider = null;
   }
 
-  // Если выбран эффект "Оригинал", скрываем слайдер
   if (currentEffect.name === 'none') {
     effectLevelSliderContainer.classList.add('hidden');
     effectLevelValue.value = '';
@@ -158,11 +156,9 @@ const onEffectChange = (evt) => {
   }
 };
 
-// Функция инициализации редактора (при открытии формы)
 const initEditor = () => {
   resetScale();
 
-  //эффект "Оригинал" по умолчанию
   const noneEffect = document.querySelector('#effect-none');
   if (noneEffect) {
     noneEffect.checked = true;

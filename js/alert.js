@@ -1,10 +1,21 @@
 const ALERT_SHOW_TIME = 5000;
-
 const ALERT_TEMPLATES = {
   'error': 'error',
   'success': 'success',
   'data-error': 'data-error'
 };
+const TEMPLATES_CACHE = {};
+
+const initTemplatesCache = () => {
+  Object.entries(ALERT_TEMPLATES).forEach(([type, templateId]) => {
+    const template = document.querySelector(`#${templateId}`);
+    if (template) {
+      TEMPLATES_CACHE[type] = template;
+    }
+  });
+};
+
+initTemplatesCache();
 
 const showAlert = (message, alertType = 'data-error') => {
   const existingAlert = document.querySelector(`.${alertType}`);
@@ -12,8 +23,11 @@ const showAlert = (message, alertType = 'data-error') => {
     existingAlert.remove();
   }
 
-  const templateId = ALERT_TEMPLATES[alertType] || 'data-error';
-  const template = document.querySelector(`#${templateId}`);
+  const template = TEMPLATES_CACHE[alertType];
+  if (!template) {
+    return;
+  }
+
   const alertElement = template.content.cloneNode(true);
 
   const titleElement = alertElement.querySelector(`.${alertType}__title`);

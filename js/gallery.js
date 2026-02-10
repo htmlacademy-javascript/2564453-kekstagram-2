@@ -1,8 +1,8 @@
 import { openFullPicture } from './full-picture.js';
 
-const initGallery = () => {
-  const picturesContainer = document.querySelector('.pictures');
+const picturesContainer = document.querySelector('.pictures');
 
+const initGallery = () => {
   picturesContainer.addEventListener('click', (evt) => {
     const thumbnail = evt.target.closest('.picture');
 

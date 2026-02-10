@@ -58,7 +58,6 @@ const validateHashtags = (value) => {
   return true;
 };
 
-// Сообщения об ошибках
 const getHashtagErrorMessage = (value) => {
   const hashtags = normalizeHashtags(value);
 
