@@ -5,6 +5,7 @@ const ALERT_TEMPLATES = {
   'data-error': 'data-error'
 };
 const TEMPLATES_CACHE = {};
+const RADIX_DECIMAL = 10;
 
 const initTemplatesCache = () => {
   Object.entries(ALERT_TEMPLATES).forEach(([type, templateId]) => {
@@ -44,7 +45,7 @@ const showAlert = (message, alertType = 'data-error') => {
 
   const closeAlert = () => {
     if (addedAlert.dataset.timeoutId) {
-      clearTimeout(parseInt(addedAlert.dataset.timeoutId, 10));
+      clearTimeout(parseInt(addedAlert.dataset.timeoutId, RADIX_DECIMAL));
     }
     addedAlert.remove();
   };
@@ -83,4 +84,4 @@ const showAlert = (message, alertType = 'data-error') => {
   addedAlert.dataset.timeoutId = alertTimeout;
 };
 
-export { showAlert, ALERT_SHOW_TIME };
+export { showAlert, ALERT_SHOW_TIME, RADIX_DECIMAL };
